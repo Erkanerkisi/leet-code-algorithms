@@ -11,18 +11,28 @@ func main() {
 }
 
 func isPalindrome(s string) bool {
-	var left,right string
 	runes := []rune(s)
-	for i := 0; i < len(runes)/2; i++ {
-		if (!unicode.IsLetter(runes[i]) && !unicode.IsNumber(runes[i])) &&
-			(unicode.IsLetter(runes[len(runes)-i-1]) || unicode.IsNumber(runes[len(runes)-i-1])) {
-			return false
+	left := 0
+	right := len(runes) - 1
+	var tmpLeft, tmpRight string
+	for left < right {
+		if tmpLeft == "" && unicode.IsLetter(runes[left]) || unicode.IsNumber(runes[left]) {
+			tmpLeft = string(runes[left])
+		} else if tmpLeft == "" {
+			left++
+			continue
 		}
-		if (unicode.IsLetter(runes[i]) || unicode.IsNumber(runes[i])) &&
-			(unicode.IsLetter(runes[len(runes)-i-1]) && unicode.IsNumber(runes[len(runes)-i-1])) {
-			return false
+		if tmpRight == "" && unicode.IsLetter(runes[right]) || unicode.IsNumber(runes[right]) {
+			tmpRight = string(runes[right])
+		} else if tmpRight == "" {
+			right--
+			continue
 		}
-		if strings.ToLower(string(runes[i])) != strings.ToLower(string(runes[len(runes)-i-1])) {
+		if tmpLeft != "" && tmpRight != "" && strings.ToLower(tmpLeft) == strings.ToLower(tmpRight) {
+			tmpLeft, tmpRight = "", ""
+			left++
+			right--
+		} else if tmpLeft != "" && tmpRight != "" && strings.ToLower(tmpLeft) != strings.ToLower(tmpRight) {
 			return false
 		}
 	}
